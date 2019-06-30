@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/udit/CLionProjects/EzLang/main.cpp
+iostream
+-
+sstream
+-
+fstream
+-
+cstdio
+-
+cstring
+-
+utils.h
+/home/udit/CLionProjects/EzLang/utils.h
+
+/home/udit/CLionProjects/EzLang/utils.h
+utility
+-
+utility
+-
+utility
+-
+string
+-
+iostream
+-
+sstream
+-
+map
+-
+vector
+-
+regex
+-
+
