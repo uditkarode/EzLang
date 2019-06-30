@@ -82,10 +82,10 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/udit/CLionProjects/EzLang/main.cpp">
+		<Unit filename="/home/udit/CLionProjects/EzLang/ast.h">
 			<Option target="EzLang"/>
 		</Unit>
-		<Unit filename="/home/udit/CLionProjects/EzLang/tinyexpr.h">
+		<Unit filename="/home/udit/CLionProjects/EzLang/main.cpp">
 			<Option target="EzLang"/>
 		</Unit>
 		<Unit filename="/home/udit/CLionProjects/EzLang/utils.h">

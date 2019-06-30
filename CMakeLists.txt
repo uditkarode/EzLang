@@ -3,4 +3,4 @@ project(EzLang)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(EzLang main.cpp utils.h tinyexpr.h)
+add_executable(EzLang main.cpp utils.h ast.h)
