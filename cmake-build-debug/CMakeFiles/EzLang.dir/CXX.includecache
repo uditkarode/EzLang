@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/home/udit/CLionProjects/EzLang/lexer.h
+utils.h
+/home/udit/CLionProjects/EzLang/utils.h
+
 /home/udit/CLionProjects/EzLang/main.cpp
 iostream
 -
@@ -17,26 +21,24 @@ cstdio
 -
 cstring
 -
+program.h
+/home/udit/CLionProjects/EzLang/program.h
+
+/home/udit/CLionProjects/EzLang/parser.h
+iostream
+-
 utils.h
 /home/udit/CLionProjects/EzLang/utils.h
 
+/home/udit/CLionProjects/EzLang/program.h
+utils.h
 /home/udit/CLionProjects/EzLang/utils.h
-utility
--
-utility
--
-utility
--
-string
--
-iostream
--
-sstream
--
-map
--
-vector
--
+lexer.h
+/home/udit/CLionProjects/EzLang/lexer.h
+parser.h
+/home/udit/CLionProjects/EzLang/parser.h
+
+/home/udit/CLionProjects/EzLang/utils.h
 regex
 -
 

@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "utils.h"
+#include "program.h"
 
 using namespace std;
 
@@ -20,7 +20,6 @@ int main(int argc, char** argv){
         if(!source.empty()){
             EzProgram program(source);
             program.tokenize();
-            //program.printTokens();
             program.parse();
         } else {
             cout << "FATAL: no such file in the current directory\n";
