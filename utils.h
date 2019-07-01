@@ -79,15 +79,15 @@ class Utils {
             return -1;
     }
 
-    static string infixToPostfix(string s){
+    static vector<string> infixToPostfix(string s){
         stack<char> st;
         st.push('N');
         int l = s.length();
-        string ns;
+        vector<string> ns;
         for(int i = 0; i < l; i++){
             // If the scanned character is an operand, add it to output string.
             if(isdigit(s[i]))
-                ns+=s[i];
+                ns.emplace_back(string(1, s[i]));
 
             // If the scanned character is an ‘(‘, push it to the stack.
             else if(s[i] == '(')
@@ -100,7 +100,7 @@ class Utils {
                 while(st.top() != 'N' && st.top() != '('){
                     char c = st.top();
                     st.pop();
-                    ns += c;
+                    ns.emplace_back(string(1, c));
                 }
 
                 if(st.top() == '('){
@@ -114,7 +114,7 @@ class Utils {
                 while(st.top() != 'N' && precedence(s[i]) <= precedence(st.top())){
                     char c = st.top();
                     st.pop();
-                    ns += c;
+                    ns.emplace_back(string(1, c));
                 }
                 st.push(s[i]);
             }
@@ -124,16 +124,16 @@ class Utils {
         while(st.top() != 'N'){
             char c = st.top();
             st.pop();
-            ns += c;
+            ns.emplace_back(string(1, c));
         }
 
         return ns;
     }
 
-    static bool isOperator(char c){
-        return c == '+' || c == '-' ||
-               c == '*' || c == '/' ||
-               c == '^';
+    static bool isOperator(const string& c){
+        return c == "+" || c == "-" ||
+               c == "*" || c == "/" ||
+               c == "^";
     }
 
     static int toInt(string s){

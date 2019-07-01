@@ -25,7 +25,7 @@ int main(int argc, char** argv){
             cout << "FATAL: no such file in the current directory\n";
         }
     } else {
-        cout << "USAGE: ez [filename]\n";
+        cout << "USAGE: " + string(argv[0]) + " [filename]\n";
         cout << "EzLang by uditkarode.github.io\n";
     }
     return 0;

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include <iostream>
 #include "utils.h"
 
@@ -6,9 +8,9 @@ struct AstNode {
     AstNode* left{};
     AstNode* right{};
 
-    static AstNode* newNode(char val){
+    static AstNode* newNode(string val){
         auto node = new AstNode();
-        node->val = val;
+        node->val = move(val);
         node->left = nullptr;
         node->right = nullptr;
         return node;
@@ -20,13 +22,13 @@ class Parser {
     string tmp_expr;
     bool assignment_chain = false;
 
-    static AstNode* constructTree(const string& expression){
+    static AstNode* constructTree(const vector<string> &expression){
         stack<AstNode *> st;
         AstNode *t, *t1, *t2;
 
         // Traverse through every character of
         // input expression
-        for (char i : expression){
+        for (const string& i : expression){
             // If operand, simply push into stack
             if (!Utils::isOperator(i)){
                 t = AstNode::newNode(i);
@@ -101,7 +103,7 @@ class Parser {
                 assignment_var = tokens[i - 1].val;
             } else if (assignment_chain && tok.type == NEWLINE) {
                 assignment_chain = false;
-                string postfix = Utils::infixToPostfix(tmp_expr);
+                vector<string> postfix = Utils::infixToPostfix(tmp_expr);
                 auto root = constructTree(postfix);
                 int answer = evalAST(root);
                 variables[assignment_var] = to_string(answer);
