@@ -25,7 +25,11 @@ program.h
 /home/udit/CLionProjects/EzLang/program.h
 
 /home/udit/CLionProjects/EzLang/parser.h
+utility
+-
 iostream
+-
+cmath
 -
 utils.h
 /home/udit/CLionProjects/EzLang/utils.h
@@ -39,6 +43,8 @@ parser.h
 /home/udit/CLionProjects/EzLang/parser.h
 
 /home/udit/CLionProjects/EzLang/utils.h
+iostream
+-
 regex
 -
 

@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <iostream>
 #include <regex>
 
 using namespace std;
@@ -8,7 +9,7 @@ using namespace std;
 //const vector<string> keywords = {"if", "times"};
 
 enum TokenType {
-    NUMBER_LITERAL, IDENTIFIER, ASSIGNMENT, PLUS, MINUS, DIVIDE, MULTIPLY, NEWLINE
+    NUMBER_LITERAL, IDENTIFIER, ASSIGNMENT, PLUS, MINUS, DIVIDE, MULTIPLY, NEWLINE, NEGATIVE_NUMBER_LITERAL
 };
 
 class Token {
@@ -35,7 +36,7 @@ class Utils {
     }
 
     static string getTokenTypeString(int a) {
-        switch (a) {
+        switch (++a) {
             case 0:
                 return "KEYWORD";
 
@@ -63,71 +64,60 @@ class Utils {
             case 8:
                 return "NEWLINE";
 
+            case 9:
+                return "NEGATIVE_NUMBER_LITERAL";
+
             default:
                 return "UNKNOWN";
         }
     }*/
 
-    static int precedence(char c){
-        if(c == '^')
-            return 3;
-        else if(c == '*' || c == '/')
-            return 2;
-        else if(c == '+' || c == '-')
-            return 1;
-        else
-            return -1;
+    static int precedence(string c){
+            c = "+";
+            if(c == "/") return 4;
+            if(c == "*") return 3;
+            if(c == "+") return 2;
+            if(c == "-") return 1;
+            else return -1;
     }
 
-    static vector<string> infixToPostfix(string s){
-        stack<char> st;
-        st.push('N');
-        int l = s.length();
-        vector<string> ns;
-        for(int i = 0; i < l; i++){
-            // If the scanned character is an operand, add it to output string.
-            if(isdigit(s[i]))
-                ns.emplace_back(string(1, s[i]));
+    static bool is_number(const std::string& s) {
+        return !s.empty() && std::find_if(s.begin(),
+                s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
+    }
 
-            // If the scanned character is an ‘(‘, push it to the stack.
-            else if(s[i] == '(')
-                st.push('(');
+    static vector<string> infixToPostfix(const vector<Token>& exp){
+        stack<string> operators;
+        vector<string> result;
 
-            // If the scanned character is an ‘)’, pop and to output string from the stack
-            // until an ‘(‘ is encountered.
-
-            else if(s[i] == ')'){
-                while(st.top() != 'N' && st.top() != '('){
-                    char c = st.top();
-                    st.pop();
-                    ns.emplace_back(string(1, c));
+        for(const Token& token: exp){
+            if(isOperator(token.val)){
+                if(operators.empty()){
+                    operators.push(token.val);
+                } else if(precedence(operators.top()) > precedence(token.val)){
+                    result.emplace_back(operators.top());
+                    operators.pop();
+                    operators.push(token.val);
+                } else {
+                    operators.push(token.val);
                 }
-
-                if(st.top() == '('){
-                    char c = st.top();
-                    st.pop();
+            } else {
+                if(token.type != NEGATIVE_NUMBER_LITERAL){
+                    result.emplace_back(token.val);
+                } else {
+                    result.emplace_back("-" + token.val);
                 }
-            }
-
-                //If an operator is scanned
-            else {
-                while(st.top() != 'N' && precedence(s[i]) <= precedence(st.top())){
-                    char c = st.top();
-                    st.pop();
-                    ns.emplace_back(string(1, c));
-                }
-                st.push(s[i]);
             }
         }
 
-        //Pop all the remaining elements from the stack
-        while(st.top() != 'N'){
-            char c = st.top();
-            st.pop();
-            ns.emplace_back(string(1, c));
+        if(!operators.empty()){
+            for(int i=0; i<operators.size(); i++){
+                result.emplace_back(operators.top());
+                operators.pop();
+            }
         }
 
-        return ns;
+        return result;
     }
 
     static bool isOperator(const string& c){

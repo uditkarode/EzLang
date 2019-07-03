@@ -9,9 +9,9 @@
 using namespace std;
 
 int main(int argc, char** argv){
-    if(argv[1]){
+    if(!argv[1]){
         ifstream inputFile;
-        inputFile.open(argv[1]);
+        inputFile.open("test.ez");//argv[1]);
 
         stringstream strStream;
         strStream << inputFile.rdbuf();

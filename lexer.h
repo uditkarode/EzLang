@@ -25,7 +25,14 @@ class Lexer {
 
     public:
     vector<Token> tokenize(string source) {
+        bool noConsider = false;
+
         for (int i=0; i<source.length(); i++) {
+            if(noConsider){
+                noConsider = false;
+                continue;
+            }
+
             char token = source[i];
 
             if(token == ' ' || token == '\n'){
@@ -48,7 +55,12 @@ class Lexer {
                 tokens.emplace_back(Token(token, PLUS));
             } else if (token == '-') {
                 clearNumberChain();
-                tokens.emplace_back(Token(token, MINUS));
+                if(isdigit(source[i+1])){
+                    tokens.emplace_back(Token(source[i+1], NEGATIVE_NUMBER_LITERAL));
+                    noConsider = true;
+                } else {
+                    tokens.emplace_back(Token(token, MINUS));
+                }
             } else if (token == '*') {
                 clearNumberChain();
                 tokens.emplace_back(Token(token, MULTIPLY));

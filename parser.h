@@ -1,6 +1,7 @@
 #include <utility>
 
 #include <iostream>
+#include <cmath>
 #include "utils.h"
 
 struct AstNode {
@@ -19,16 +20,29 @@ struct AstNode {
 
 class Parser {
     string assignment_var;
-    string tmp_expr;
+    vector<Token> tmp_expr;
     bool assignment_chain = false;
 
     static AstNode* constructTree(const vector<string> &expression){
         stack<AstNode *> st;
         AstNode *t, *t1, *t2;
+        bool noConsider = false;
 
-        // Traverse through every character of
-        // input expression
-        for (const string& i : expression){
+        // Traverse through every string of
+        // input vector
+        for (int j=0; j<expression.size(); j++){
+            if(noConsider){
+                noConsider = false;
+                continue;
+            }
+
+            string i = expression[j];
+
+            if(i == "-"){
+                st.push(AstNode::newNode(i + expression[j+1]));
+                noConsider = true;
+            }
+
             // If operand, simply push into stack
             if (!Utils::isOperator(i)){
                 t = AstNode::newNode(i);
@@ -85,6 +99,9 @@ class Parser {
         if (root->val=="*")
             return l_val*r_val;
 
+        if(root->val=="^")
+            return (int) pow(l_val, r_val);
+
         return l_val/r_val;
     }
 
@@ -104,12 +121,14 @@ class Parser {
             } else if (assignment_chain && tok.type == NEWLINE) {
                 assignment_chain = false;
                 vector<string> postfix = Utils::infixToPostfix(tmp_expr);
+                //for(const string& str: postfix) cout << str << ' ';
                 auto root = constructTree(postfix);
                 int answer = evalAST(root);
                 variables[assignment_var] = to_string(answer);
-                tmp_expr = assignment_var = "";
+                tmp_expr.clear();
+                assignment_var = "";
             } else if (assignment_chain) {
-                tmp_expr.append(tok.val);
+                tmp_expr.emplace_back(tok);
             }
         }
     }
