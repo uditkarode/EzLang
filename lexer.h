@@ -69,6 +69,10 @@ class Lexer {
                 tokens.emplace_back(Token(token, DIVIDE));
             } else if (token == '=') {
                 tokens.emplace_back(Token(token, ASSIGNMENT));
+            } else if(token == '('){
+                tokens.emplace_back(Token(token, OPENING_BRACKET));
+            } else if(token == ')'){
+                tokens.emplace_back(Token(token, CLOSING_BRACKET));
             } else if(regex_match(string(1, token), regex("[a-zA-Z]"))) {
                 if(identifier_chain) chain_tmp.append(string(1, token));
                 else if(regex_match(string(1, source[i+1]), regex("[a-zA-Z]"))){

@@ -9,7 +9,7 @@ using namespace std;
 //const vector<string> keywords = {"if", "times"};
 
 enum TokenType {
-    NUMBER_LITERAL, IDENTIFIER, ASSIGNMENT, PLUS, MINUS, DIVIDE, MULTIPLY, NEWLINE, NEGATIVE_NUMBER_LITERAL
+    NUMBER_LITERAL, IDENTIFIER, ASSIGNMENT, PLUS, MINUS, DIVIDE, MULTIPLY, NEWLINE, NEGATIVE_NUMBER_LITERAL, OPENING_BRACKET, CLOSING_BRACKET
 };
 
 class Token {
@@ -72,53 +72,105 @@ class Utils {
         }
     }*/
 
-    static int precedence(string c){
-            c = "+";
-            if(c == "/") return 4;
-            if(c == "*") return 3;
-            if(c == "+") return 2;
-            if(c == "-") return 1;
-            else return -1;
+    // todo okstart
+
+    static int inPrec(string input){
+        char input_char = input.c_str()[0];
+        switch (input_char) {
+            case '+':
+            case '-':
+                return 2;
+            case '*':
+            case '%':
+            case '/':
+                return 4;
+            case '^':
+                return 5;
+            case '(':
+                return 0;
+            default: return -1;
+        }
     }
 
-    static bool is_number(const std::string& s) {
-        return !s.empty() && std::find_if(s.begin(),
-                s.end(), [](char c) { return !std::isdigit(c); }) == s.end();
+// function to return precedence value
+// if operator is present outside stack.
+    static int outPrec(const string& input){
+        char input_char = input.c_str()[0];
+        switch (input_char) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '%':
+            case '/':
+                return 3;
+            case '^':
+                return 6;
+            case '(':
+                return 100;
+
+            default: return -1;
+        }
     }
 
-    static vector<string> infixToPostfix(const vector<Token>& exp){
-        stack<string> operators;
-        vector<string> result;
+// function to convert infix to postfix
+    static vector<string> infixToPostfix(vector<Token> input) {
+        stack<string> s;
+        vector<string> out;
 
-        for(const Token& token: exp){
-            if(isOperator(token.val)){
-                if(operators.empty()){
-                    operators.push(token.val);
-                } else if(precedence(operators.top()) > precedence(token.val)){
-                    result.emplace_back(operators.top());
-                    operators.pop();
-                    operators.push(token.val);
-                } else {
-                    operators.push(token.val);
-                }
-            } else {
-                if(token.type != NEGATIVE_NUMBER_LITERAL){
-                    result.emplace_back(token.val);
-                } else {
-                    result.emplace_back("-" + token.val);
+        // while input is not NULL iterate
+        int i = 0;
+        while (i < input.size()) {
+
+            // if character an operand
+            if (input[i].type == IDENTIFIER || input[i].type == NUMBER_LITERAL || input[i].type == NEGATIVE_NUMBER_LITERAL) {
+                out.emplace_back(input[i].val);
+            }
+
+                // if input is an operator, push
+            else if (isOperator(input[i].val)) {
+                if (s.empty() || outPrec(input[i].val) > inPrec(s.top()))
+                    s.push(input[i].val);
+                else {
+                    while (!s.empty() && outPrec(input[i].val) < inPrec(s.top())) {
+                        out.emplace_back(s.top());
+                        s.pop();
+                    }
+                    s.push(input[i].val);
                 }
             }
-        }
 
-        if(!operators.empty()){
-            for(int i=0; i<operators.size(); i++){
-                result.emplace_back(operators.top());
-                operators.pop();
+                // condition for opening bracket
+            else if (input[i].type == CLOSING_BRACKET) {
+                while (s.top() != "(") {
+                    out.emplace_back(s.top());
+                    s.pop();
+
+                    // if opening bracket not present
+                    if (s.empty()) {
+                        cout << "Wrong input\n";
+                        exit(1);
+                    }
+                }
+
+                // pop the opening bracket.
+                s.pop();
             }
+            i++;
         }
 
-        return result;
+        // pop the remaining operators
+        while (!s.empty()) {
+            if (s.top() == "(") {
+                printf("\n Wrong input\n");
+                exit(1);
+            }
+            out.emplace_back(s.top());
+            s.pop();
+        }
     }
+
+    // todo okend
 
     static bool isOperator(const string& c){
         return c == "+" || c == "-" ||
