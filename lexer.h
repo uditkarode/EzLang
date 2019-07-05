@@ -54,6 +54,7 @@ class Lexer {
                 clearNumberChain();
                 tokens.emplace_back(Token(token, PLUS));
             } else if (token == '-') {
+                //todo work this out
                 clearNumberChain();
                 if(isdigit(source[i+1])){
                     tokens.emplace_back(Token(source[i+1], NEGATIVE_NUMBER_LITERAL));

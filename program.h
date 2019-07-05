@@ -15,6 +15,6 @@ class EzProgram {
 public:
     explicit EzProgram(string source) { this->source = move(source); }
 
-    void tokenize(){ tokens = lexer.tokenize(source); }//for(const Token& token: tokens) { cout << token.val << " [" << Utils::getTokenTypeString(token.type) << "]\n"; } }
+    void tokenize(){ tokens = lexer.tokenize(source); }// ; for(Token s: tokens){ cout << s.val << ' '; } }
     void parse(){ parser.parse(tokens, variables); }
 };

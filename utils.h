@@ -74,100 +74,71 @@ class Utils {
 
     // todo okstart
 
-    static int inPrec(string input){
-        char input_char = input.c_str()[0];
-        switch (input_char) {
-            case '+':
-            case '-':
-                return 2;
-            case '*':
-            case '%':
-            case '/':
-                return 4;
-            case '^':
-                return 5;
-            case '(':
-                return 0;
-            default: return -1;
-        }
+    static int prec(const string& c)
+    {
+        if(c == "^")
+            return 3;
+        else if(c == "*" || c == "/")
+            return 2;
+        else if(c == "+" || c == "-")
+            return 1;
+        else
+            return -1;
     }
 
-// function to return precedence value
-// if operator is present outside stack.
-    static int outPrec(const string& input){
-        char input_char = input.c_str()[0];
-        switch (input_char) {
-            case '+':
-            case '-':
-                return 1;
-            case '*':
-            case '%':
-            case '/':
-                return 3;
-            case '^':
-                return 6;
-            case '(':
-                return 100;
+    static vector<string> infixToPostfix(vector<Token> s){
+        stack<string> st;
+        st.push("N");
+        int l = s.size();
+        vector<string> ns;
+        for(int i = 0; i < l; i++){
+            //cout << s[i].val << ']';
+            // If the scanned character is an operand, add it to output string.
+            if(s[i].type == IDENTIFIER || s[i].type == NUMBER_LITERAL)
+                ns.emplace_back(s[i].val);
 
-            default: return -1;
-        }
-    }
+            else if(s[i].type == NEGATIVE_NUMBER_LITERAL)
+                ns.emplace_back("-" + s[i].val);
 
-// function to convert infix to postfix
-    static vector<string> infixToPostfix(vector<Token> input) {
-        stack<string> s;
-        vector<string> out;
+                // If the scanned character is an ‘(‘, push it to the stack.
+            else if(s[i].type == OPENING_BRACKET)
 
-        // while input is not NULL iterate
-        int i = 0;
-        while (i < input.size()) {
+                st.push(s[i].val);
 
-            // if character an operand
-            if (input[i].type == IDENTIFIER || input[i].type == NUMBER_LITERAL || input[i].type == NEGATIVE_NUMBER_LITERAL) {
-                out.emplace_back(input[i].val);
-            }
-
-                // if input is an operator, push
-            else if (isOperator(input[i].val)) {
-                if (s.empty() || outPrec(input[i].val) > inPrec(s.top()))
-                    s.push(input[i].val);
-                else {
-                    while (!s.empty() && outPrec(input[i].val) < inPrec(s.top())) {
-                        out.emplace_back(s.top());
-                        s.pop();
-                    }
-                    s.push(input[i].val);
+                // If the scanned character is an ‘)’, pop and to output string from the stack
+                // until an ‘(‘ is encountered.
+            else if(s[i].type == CLOSING_BRACKET)
+            {
+                while(st.top() != "N" && st.top() != "("){
+                    string c = st.top();
+                    st.pop();
+                    ns.emplace_back(c);
+                }
+                if(st.top() == "(")
+                {
+                    st.pop();
                 }
             }
 
-                // condition for opening bracket
-            else if (input[i].type == CLOSING_BRACKET) {
-                while (s.top() != "(") {
-                    out.emplace_back(s.top());
-                    s.pop();
-
-                    // if opening bracket not present
-                    if (s.empty()) {
-                        cout << "Wrong input\n";
-                        exit(1);
-                    }
+                //If an operator is scanned
+            else {
+                while(st.top() != "N" && prec(s[i].val) <= prec(st.top())){
+                    string c = st.top();
+                    st.pop();
+                    ns.emplace_back(c);
                 }
-
-                // pop the opening bracket.
-                s.pop();
+                st.push(s[i].val);
             }
-            i++;
+
+        }
+        //Pop all the remaining elements from the stack
+        while(st.top() != "N"){
+            string c = st.top();
+            st.pop();
+            ns.emplace_back(c);
         }
 
-        // pop the remaining operators
-        while (!s.empty()) {
-            if (s.top() == "(") {
-                printf("\n Wrong input\n");
-                exit(1);
-            }
-            out.emplace_back(s.top());
-            s.pop();
-        }
+        return ns;
     }
 
     // todo okend

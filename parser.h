@@ -121,7 +121,8 @@ class Parser {
             } else if (assignment_chain && tok.type == NEWLINE) {
                 assignment_chain = false;
                 vector<string> postfix = Utils::infixToPostfix(tmp_expr);
-                for(const string& str: postfix) cout << str << ' ';
+                //for(const Token& str: tmp_expr) cout << str.val << ' ';
+                cout << '\n';
                 auto root = constructTree(postfix);
                 int answer = evalAST(root);
                 variables[assignment_var] = to_string(answer);
