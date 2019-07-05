@@ -54,9 +54,8 @@ class Lexer {
                 clearNumberChain();
                 tokens.emplace_back(Token(token, PLUS));
             } else if (token == '-') {
-                //todo work this out
                 clearNumberChain();
-                if(isdigit(source[i+1])){
+                if((source[i-1] == '=' || Utils::isOperator(string(1, source[i-1]))) && isdigit(source[i+1])){
                     tokens.emplace_back(Token(source[i+1], NEGATIVE_NUMBER_LITERAL));
                     noConsider = true;
                 } else {

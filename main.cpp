@@ -21,6 +21,8 @@ int main(int argc, char** argv){
             EzProgram program(source);
             program.tokenize();
             program.parse();
+
+            cout << endl;
         } else {
             cout << "FATAL: no such file in the current directory\n";
         }
