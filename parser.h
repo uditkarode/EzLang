@@ -22,6 +22,7 @@ class Parser {
     string assignment_var;
     vector<Token> tmp_expr;
     bool assignment_chain = false;
+    bool comment_chain = false;
 
     static AstNode* constructTree(const vector<string> &expression){
         stack<AstNode *> st;
@@ -109,6 +110,12 @@ class Parser {
     void parse(vector<Token> tokens, map<string, string> &variables) {
         for (int i = 0; i < int(tokens.size()); i++) {
             auto tok = tokens[i];
+
+            if(comment_chain){
+                if(tok.type == NEWLINE){
+                    comment_chain = false; continue;
+                } else continue;
+            }
             // print handling
             if (tok.type == IDENTIFIER && tokens[i + 1].type == NEWLINE) {
                 cout << variables[tok.val];
@@ -121,7 +128,7 @@ class Parser {
             } else if (assignment_chain && tok.type == NEWLINE) {
                     assignment_chain = false;
                     vector<string> postfix = Utils::infixToPostfix(tmp_expr);
-                    for(const string& str: postfix) cout << str << ' ';
+                    //for(const string& str: postfix) cout << str << ' ';
                     auto root = constructTree(postfix);
                     int answer = evalAST(root);
                     variables[assignment_var] = to_string(answer);
@@ -129,7 +136,7 @@ class Parser {
                     assignment_var = "";
             } else if (assignment_chain) {
                 tmp_expr.emplace_back(tok);
-            } else if (tok.type == HASHTAG && tokens[i - 1].type == NEWLINE) continue;
+            } else if (tok.type == HASHTAG && tokens[i - 1].type == NEWLINE) comment_chain = true;
         }
     }
 };

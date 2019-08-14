@@ -27,7 +27,7 @@ class Lexer {
     vector<Token> tokenize(string source) {
         bool noConsider = false;
 
-        for (int i=0; i<source.length(); i++) {
+        for (int i=0; i < int(source.length()); i++) {
             if(noConsider){
                 noConsider = false;
                 continue;
@@ -40,10 +40,10 @@ class Lexer {
                 clearNumberChain();
             }
 
+
+
             if (token == ' ') continue;
-            else if(token == '#'){
-                tokens.emplace_back(Token("#", HASHTAG));
-            } else if (token == '\n') {
+            else if (token == '\n') {
                 lines++;
                 tokens.emplace_back(Token("\\n", NEWLINE));
             } else if (isdigit(token)) {
@@ -75,6 +75,8 @@ class Lexer {
                 tokens.emplace_back(Token(token, OPENING_BRACKET));
             } else if(token == ')'){
                 tokens.emplace_back(Token(token, CLOSING_BRACKET));
+            } else if(token == '#'){
+                tokens.emplace_back(Token("#", HASHTAG));
             } else if(regex_match(string(1, token), regex("[a-zA-Z]"))) {
                 if(identifier_chain) chain_tmp.append(string(1, token));
                 else if(regex_match(string(1, source[i+1]), regex("[a-zA-Z]"))){

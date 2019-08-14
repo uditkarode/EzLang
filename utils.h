@@ -31,7 +31,7 @@ public:
 
 class Utils {
     public:
-    /*static bool exists_in(const vector<string> &check, const string &target) {
+    static bool exists_in(const vector<string> &check, const string &target) {
         for (auto &str: check) if (str == target) return true;
         return false;
     }
@@ -68,15 +68,15 @@ class Utils {
             case 9:
                 return "NEGATIVE_NUMBER_LITERAL";
 
+            case 12:
+                return "HASHTAG";
+
             default:
                 return "UNKNOWN";
         }
-    }*/
+    }
 
-    // todo okstart
-
-    static int prec(const string& c)
-    {
+    static int prec(const string& c){
         if(c == "^")
             return 3;
         else if(c == "*" || c == "/")
@@ -93,35 +93,24 @@ class Utils {
         int l = s.size();
         vector<string> ns;
         for(int i = 0; i < l; i++){
-            //cout << s[i].val << ']';
-            // If the scanned character is an operand, add it to output string.
             if(s[i].type == IDENTIFIER || s[i].type == NUMBER_LITERAL)
                 ns.emplace_back(s[i].val);
 
             else if(s[i].type == NEGATIVE_NUMBER_LITERAL)
                 ns.emplace_back("-" + s[i].val);
-
-                // If the scanned character is an ‘(‘, push it to the stack.
             else if(s[i].type == OPENING_BRACKET)
-
                 st.push(s[i].val);
-
-                // If the scanned character is an ‘)’, pop and to output string from the stack
-                // until an ‘(‘ is encountered.
-            else if(s[i].type == CLOSING_BRACKET)
-            {
+            else if(s[i].type == CLOSING_BRACKET){
                 while(st.top() != "N" && st.top() != "("){
                     string c = st.top();
                     st.pop();
                     ns.emplace_back(c);
                 }
-                if(st.top() == "(")
-                {
+                if(st.top() == "("){
                     st.pop();
                 }
             }
 
-                //If an operator is scanned
             else {
                 while(st.top() != "N" && prec(s[i].val) <= prec(st.top())){
                     string c = st.top();
@@ -130,9 +119,7 @@ class Utils {
                 }
                 st.push(s[i].val);
             }
-
         }
-        //Pop all the remaining elements from the stack
         while(st.top() != "N"){
             string c = st.top();
             st.pop();
@@ -141,8 +128,6 @@ class Utils {
 
         return ns;
     }
-
-    // todo okend
 
     static bool isOperator(const string& c){
         return c == "+" || c == "-" ||
