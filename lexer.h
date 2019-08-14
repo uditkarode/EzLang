@@ -41,7 +41,9 @@ class Lexer {
             }
 
             if (token == ' ') continue;
-            else if (token == '\n') {
+            else if(token == '#'){
+                tokens.emplace_back(Token("#", HASHTAG));
+            } else if (token == '\n') {
                 lines++;
                 tokens.emplace_back(Token("\\n", NEWLINE));
             } else if (isdigit(token)) {

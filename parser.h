@@ -30,7 +30,7 @@ class Parser {
 
         // Traverse through every string of
         // input vector
-        for (int j=0; j<expression.size(); j++){
+        for (int j=0; j < int(expression.size()) ; j++){
             if(noConsider){
                 noConsider = false;
                 continue;
@@ -107,7 +107,7 @@ class Parser {
 
     public:
     void parse(vector<Token> tokens, map<string, string> &variables) {
-        for (int i = 0; i < tokens.size(); i++) {
+        for (int i = 0; i < int(tokens.size()); i++) {
             auto tok = tokens[i];
             // print handling
             if (tok.type == IDENTIFIER && tokens[i + 1].type == NEWLINE) {
@@ -119,17 +119,17 @@ class Parser {
                 assignment_chain = true;
                 assignment_var = tokens[i - 1].val;
             } else if (assignment_chain && tok.type == NEWLINE) {
-                assignment_chain = false;
-                vector<string> postfix = Utils::infixToPostfix(tmp_expr);
-                //for(const string& str: postfix) cout << str << ' ';
-                auto root = constructTree(postfix);
-                int answer = evalAST(root);
-                variables[assignment_var] = to_string(answer);
-                tmp_expr.clear();
-                assignment_var = "";
+                    assignment_chain = false;
+                    vector<string> postfix = Utils::infixToPostfix(tmp_expr);
+                    for(const string& str: postfix) cout << str << ' ';
+                    auto root = constructTree(postfix);
+                    int answer = evalAST(root);
+                    variables[assignment_var] = to_string(answer);
+                    tmp_expr.clear();
+                    assignment_var = "";
             } else if (assignment_chain) {
                 tmp_expr.emplace_back(tok);
-            }
+            } else if (tok.type == HASHTAG && tokens[i - 1].type == NEWLINE) continue;
         }
     }
 };

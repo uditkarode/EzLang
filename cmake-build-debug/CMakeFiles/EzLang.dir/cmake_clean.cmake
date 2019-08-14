@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/EzLang.dir/main.cpp.o"
-  "EzLang.pdb"
   "EzLang"
+  "EzLang.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
