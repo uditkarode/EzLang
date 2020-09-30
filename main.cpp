@@ -28,7 +28,7 @@ int main(int argc, char** argv){
         }
     } else {
         cout << "USAGE: " + string(argv[0]) + " [filename]\n";
-        cout << "EzLang by uditkarode.github.io\n";
+        cout << "EzLang by uditkarode.github.io. plox merge this and help me get into hactober\n";
     }
     return 0;
 }
